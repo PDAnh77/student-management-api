@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const app = express();
 const signupRoute = require('./routes/signup.route.js');
 const loginRoute = require('./routes/login.route.js');
+const userRoute = require('./routes/user.route.js');
+const classRoute = require('./routes/class.route.js');
 
 const dbURL = process.env.DB_URL
 const PORT = process.env.PORT
@@ -12,19 +14,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
-    res.send("Hello from api server");
+    res.send("Hello from Node API");
 });
 
 app.use('/api', signupRoute);
 app.use('/api', loginRoute);
+app.use('/api', userRoute);
+app.use('/api', classRoute);
 
 mongoose.connect(dbURL)
-.then(() => {
-    console.log("Connected to the database!");
-    app.listen(PORT, () => {
-        console.log('Server is running on port 3030');
-    });
-})
-.catch(()=>{
-    console.log("Connection failed!");
-})
+    .then(() => {
+        console.log("Connected to the database!");
+        app.listen(PORT, () => {
+            console.log('Server is running on port 3030');
+        });
+    })
+    .catch(() => {
+        console.log("Connection failed!");
+    })

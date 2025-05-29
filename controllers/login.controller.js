@@ -1,6 +1,4 @@
 const User = require('../models/user.model');
-const UserStudent = require('../models/student.model');
-const UserTeacher = require('../models/teacher.model');
 const bcrypt = require('bcrypt');
 
 const Login = async (req, res) => {
@@ -24,7 +22,7 @@ const Login = async (req, res) => {
         res.status(200).json({
           message: 'Login successful',
           user: {
-              id: user._id,
+              userid: user._id,
               username: user.username,
               role: user.role
           }

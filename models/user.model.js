@@ -18,9 +18,29 @@ const UserSchema = mongoose.Schema(
             default: 'student',
             required: false
         },
+        fullname: {
+            type: String,
+            required: false,
+            default: null
+        },
+        brithdate: {
+            type: Date,
+            required: false,
+            default: null
+        },
+        email: {
+            type: String,
+            required: false,
+            default: null
+        },
+        academicYear: {
+            type: Number,
+            required: false,
+            default: null
+        },
     },
     {
-        Timestamp: true
+        timestamps: true,
     }
 )
 
