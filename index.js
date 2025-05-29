@@ -6,6 +6,8 @@ const signupRoute = require('./routes/signup.route.js');
 const loginRoute = require('./routes/login.route.js');
 const userRoute = require('./routes/user.route.js');
 const classRoute = require('./routes/class.route.js');
+const gradeRoute = require('./routes/grade.route.js');
+const notificationRoute = require('./routes/notification.route.js');
 
 const dbURL = process.env.DB_URL
 const PORT = process.env.PORT
@@ -21,6 +23,8 @@ app.use('/api', signupRoute);
 app.use('/api', loginRoute);
 app.use('/api', userRoute);
 app.use('/api', classRoute);
+app.use('/api', gradeRoute);
+
 
 mongoose.connect(dbURL)
     .then(() => {
