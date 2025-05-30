@@ -2,6 +2,30 @@ const User = require('../models/user.model');
 const Class = require('../models/class.model');
 const Grade = require('../models/grade.model');
 
+const getGrades = async (req, res) => {
+    try {
+        const grades = await Grade.find({});
+        res.status(200).json(grades);
+    } catch (error) {
+        console.error('Error fetching grades:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+const getGradeById = async (req, res) => {
+    try {
+        const gradeId = req.params.id;
+        const grade = await Grade.findById(gradeId);
+        if (!grade) {
+            return res.status(404).json({ message: 'Grade not found' });
+        }
+        res.status(200).json(grade);
+    } catch (error) {
+        console.error('Error fetching grade by ID:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 const getStudentGradeInClass = async (req, res) => {
     try {
         const { studentId, identifier } = req.params;
@@ -25,9 +49,9 @@ const getStudentGradeInClass = async (req, res) => {
         console.error('Error fetching student grade in class:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
 
-const getStudentGrades = async (req, res) => {
+const getStudentGradeInClasses = async (req, res) => {
     try {
         const studentId = req.params.studentId;
         const grades = await Grade.find({ studentId });
@@ -61,7 +85,7 @@ const getClassGrades = async (req, res) => {
         console.error('Error fetching class grades:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
 
 const createGrade = async (req, res) => {
     try {
@@ -98,7 +122,7 @@ const createGrade = async (req, res) => {
 
 const updateGrade = async (req, res) => {
     try {
-        const gradeId = req.params.gradeId;
+        const gradeId = req.params.id;
         const { grade } = req.body;
 
         const existingGrade = await Grade.findById(gradeId);
@@ -126,7 +150,7 @@ const updateGrade = async (req, res) => {
 
 const deleteGrade = async (req, res) => {
     try {
-        const gradeId = req.params.gradeId;
+        const gradeId = req.params.id;
         const deletedGrade = await Grade.findByIdAndDelete(gradeId);
         if (!deletedGrade) {
             return res.status(404).json({ message: 'Grade not found' });
@@ -136,11 +160,13 @@ const deleteGrade = async (req, res) => {
         console.error('Error deleting grade:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
 
 module.exports = {
+    getGrades,
+    getGradeById,
     getStudentGradeInClass,
-    getStudentGrades,
+    getStudentGradeInClasses,
     getClassGrades,
     createGrade,
     updateGrade,

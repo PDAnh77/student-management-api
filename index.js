@@ -24,7 +24,7 @@ app.use('/api', loginRoute);
 app.use('/api', userRoute);
 app.use('/api', classRoute);
 app.use('/api', gradeRoute);
-
+app.use('/api', notificationRoute);
 
 mongoose.connect(dbURL)
     .then(() => {

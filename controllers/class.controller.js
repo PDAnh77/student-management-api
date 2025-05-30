@@ -3,7 +3,7 @@ const User = require('../models/user.model.js');
 
 const getClasses = async (req, res) => {
     try {
-        const classes = await Class.find({});
+        const classes = await Class.find({}).populate('teacherId', 'fullname');
         res.status(200).json(classes);
     } catch (error) {
         console.error('Error fetching classes:', error);
@@ -121,7 +121,7 @@ const joinClass = async (req, res) => {
 
 const leaveClass = async (req, res) => {
     try {
-        const {classIdentifier, studentId } = req.params;
+        const { classIdentifier, studentId } = req.params;
 
         let classData = await Class.findOne({ classCode: classIdentifier });
 
