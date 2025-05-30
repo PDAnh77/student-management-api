@@ -27,7 +27,7 @@ const Signup = async (req, res) => {
         });
         await newUser.save();
 
-        res.status(200).json({ message: 'User registered successfully' });
+        res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         console.error('Error during signup:', error);
         res.status(500).json({ message: 'Internal server error' });

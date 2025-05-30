@@ -80,7 +80,7 @@ const createClass = async (req, res) => {
 
         const newClass = new Class(req.body);
         await newClass.save();
-        res.status(200).json(newClass);
+        res.status(201).json(newClass);
     } catch (error) {
         console.error('Error creating class:', error);
         res.status(500).json({ message: 'Internal server error' });

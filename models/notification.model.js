@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const notificationSchema = new mongoose.Schema(
     {
-        userId: {
+        studentId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true
@@ -11,6 +11,11 @@ const notificationSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Class',
             required: true,
+        },
+        teacherId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: false
         },
         message: {
             type: String,

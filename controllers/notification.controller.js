@@ -1,4 +1,5 @@
 const Notification = require('../models/notification.model');
+const User = require('../models/user.model');
 const Class = require('../models/class.model');
 
 const getNotifications = async (req, res) => {
@@ -28,7 +29,17 @@ const getNotificationsById = async (req, res) => {
 const getNotificationsByUserId = async (req, res) => {
     try {
         const userId = req.params.userId;
-        const notifications = await Notification.find({ userId });
+        const userID = await User.findById(userId);
+        let notifications;
+
+        if (!userID) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        if (userID.role === 'student') {
+            notifications = await Notification.find({ studentId: userId });
+        } else if (userID.role === 'teacher') {
+            notifications = await Notification.find({ teacherId: userId });
+        }
         if (notifications.length === 0) {
             return res.status(404).json({ message: 'No notifications found for this user' });
         }
@@ -42,7 +53,7 @@ const getNotificationsByUserId = async (req, res) => {
 const getNotificationsByUserAndClass = async (req, res) => {
     try {
         const { userId, classId } = req.params;
-        const notifications = await Notification.find({ userId, classId }).populate('classId', 'teacherId');
+        const notifications = await Notification.find({ userId, classId });
         if (notifications.length === 0) {
             return res.status(404).json({ message: 'No notifications found for this user in this class' });
         }
@@ -56,7 +67,7 @@ const getNotificationsByUserAndClass = async (req, res) => {
 const getNotificationsByClass = async (req, res) => {
     try {
         const classId = req.params.classId;
-        const notifications = await Notification.find({ classId }).populate('classId', 'teacherId');
+        const notifications = await Notification.find({ classId });
         if (notifications.length === 0) {
             return res.status(404).json({ message: 'No notifications found for this class' });
         }
@@ -69,26 +80,31 @@ const getNotificationsByClass = async (req, res) => {
 
 const createNotification = async (req, res) => {
     try {
-        const { userId, classId, type } = req.body;
-        const classData = await Class.findById(classId);
-        if (!userId || !classId || !type) {
-            return res.status(400).json({ message: 'User ID, Class ID, and Type are required' });
+        const { studentId, classId, type } = req.body;
+        if (!studentId || !classId || !type) {
+            return res.status(400).json({ message: 'Student ID, Class ID, and Type are required' });
         }
-        if (Notification.findOne({ userId, classId, type })) {
+
+        const existingNotification = await Notification.findOne({ studentId, classId, type });
+        if (existingNotification) {
             return res.status(409).json({ message: 'Notification already exists' });
         }
+
+        const classData = await Class.findById(classId);
         if (!classData) {
             return res.status(404).json({ message: 'Class not found' });
         }
-        if (classData.students.includes(userId) && type !== 'leave') {
+        const teacherId = classData.teacherId;
+
+        if (classData.students.includes(studentId) && type !== 'leave') {
             return res.status(400).json({ message: 'Invalid notification type' });
         }
-        if (!classData.students.includes(userId) && type !== 'join') {
+        if (!classData.students.includes(studentId) && type !== 'join') {
             return res.status(400).json({ message: 'Invalid notification type' });
         }
-        const newNotification = new Notification({ userId, classId, type });
+        const newNotification = new Notification({ studentId, classId, type, teacherId });
         await newNotification.save();
-        res.status(200).json(newNotification);
+        res.status(201).json(newNotification);
     } catch (error) {
         console.error('Error creating notification:', error);
         res.status(500).json({ message: 'Internal server error' });

@@ -1,7 +1,12 @@
 require('dotenv').config();
-const express = require('express');
 const mongoose = require('mongoose');
+const express = require('express');
 const app = express();
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 const signupRoute = require('./routes/signup.route.js');
 const loginRoute = require('./routes/login.route.js');
 const userRoute = require('./routes/user.route.js');
@@ -30,7 +35,7 @@ mongoose.connect(dbURL)
     .then(() => {
         console.log("Connected to the database!");
         app.listen(PORT, () => {
-            console.log('Server is running on port 3030');
+            console.log(`Server is running on port ${PORT}`);
         });
     })
     .catch(() => {

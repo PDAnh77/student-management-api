@@ -113,7 +113,7 @@ const createGrade = async (req, res) => {
         });
 
         await newGrade.save();
-        res.status(200).json(newGrade);
+        res.status(201).json(newGrade);
     } catch (error) {
         console.error('Error creating grade:', error);
         res.status(500).json({ message: 'Internal server error' });
