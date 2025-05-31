@@ -7,6 +7,26 @@ const swaggerSpec = require('./swagger');
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+app.get('/redoc', (req, res) => {
+    res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Redoc - Student Management API</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+          body { margin: 0; padding: 0; }
+        </style>
+      </head>
+      <body>
+        <redoc spec-url='/swagger.json'></redoc>
+        <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
+      </body>
+    </html>
+  `);
+});
+
 const signupRoute = require('./routes/signup.route.js');
 const loginRoute = require('./routes/login.route.js');
 const userRoute = require('./routes/user.route.js');
@@ -22,6 +42,10 @@ app.use(express.urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
     res.send("Hello from Node API");
+});
+app.get('/swagger.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
 });
 
 app.use('/api', signupRoute);

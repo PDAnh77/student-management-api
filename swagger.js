@@ -19,7 +19,7 @@ const options = {
         ],
         servers: [
             {
-                url: 'http://localhost:3030/api',
+                url: 'https://student-management-api-64hl.onrender.com/api',
             },
         ],
     },
