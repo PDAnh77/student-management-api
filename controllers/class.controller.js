@@ -3,7 +3,7 @@ const User = require('../models/user.model.js');
 
 const getClasses = async (req, res) => {
     try {
-        const classes = await Class.find({}).populate('teacherId', 'fullname');
+        const classes = await Class.find({});
         res.status(200).json(classes);
     } catch (error) {
         console.error('Error fetching classes:', error);
