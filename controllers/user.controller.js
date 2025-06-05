@@ -27,6 +27,9 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         const userID = req.params.userid;
+        if (req.body.birthday && typeof req.body.birthday === 'string') {
+            req.body.birthday = new Date(req.body.birthday);
+        }
         const user = await User.findByIdAndUpdate(userID, req.body, {
             new: true,
             runValidators: true

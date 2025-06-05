@@ -23,7 +23,7 @@ const UserSchema = mongoose.Schema(
             required: false,
             default: null
         },
-        brithdate: {
+        birthday: {
             type: Date,
             required: false,
             default: null
