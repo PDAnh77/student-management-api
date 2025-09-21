@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
+const authMiddleware = require('./middleware/authenticate.js');
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
@@ -29,6 +30,8 @@ app.get('/redoc', (req, res) => {
 
 const signupRoute = require('./routes/signup.route.js');
 const loginRoute = require('./routes/login.route.js');
+const refreshRoute = require('./routes/refresh.route.js');
+const logoutRoute = require('./routes/logout.route.js');
 const userRoute = require('./routes/user.route.js');
 const classRoute = require('./routes/class.route.js');
 const gradeRoute = require('./routes/grade.route.js');
@@ -50,10 +53,12 @@ app.get('/swagger.json', (req, res) => {
 
 app.use('/api', signupRoute);
 app.use('/api', loginRoute);
-app.use('/api', userRoute);
-app.use('/api', classRoute);
-app.use('/api', gradeRoute);
-app.use('/api', notificationRoute);
+app.use('/api', refreshRoute);
+app.use('/api', logoutRoute);
+app.use('/api', authMiddleware, userRoute);
+app.use('/api', authMiddleware, classRoute);
+app.use('/api', authMiddleware, gradeRoute);
+app.use('/api', authMiddleware, notificationRoute);
 
 mongoose.connect(dbURL)
     .then(() => {

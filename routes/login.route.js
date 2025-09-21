@@ -4,21 +4,14 @@ const router = express.Router();
 
 /**
  * @swagger
- * tags:
- *   - name: Xác thực
- *     description: Đăng nhập và xử lý xác thực người dùng
- */
-
-/**
- * @swagger
  * /login:
  *   post:
- *     summary: Đăng nhập
+ *     summary: User login
  *     tags: [Xác thực]
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         application/x-www-form-urlencoded:
  *           schema:
  *             type: object
  *             required:
@@ -29,9 +22,19 @@ const router = express.Router();
  *                 type: string
  *               password:
  *                 type: string
+ *                 format: password
  *     responses:
  *       200:
- *         description: Đăng nhập thành công, trả về token hoặc thông tin người dùng
+ *         description: Đăng nhập thành công, trả về token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                 refreshToken:
+ *                   type: string
  *       401:
  *         description: Sai tên đăng nhập hoặc mật khẩu
  */

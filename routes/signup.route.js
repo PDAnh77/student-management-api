@@ -4,13 +4,6 @@ const router = express.Router();
 
 /**
  * @swagger
- * tags:
- *   - name: Đăng ký
- *     description: Tạo tài khoản người dùng mới
- */
-
-/**
- * @swagger
  * /signup:
  *   post:
  *     summary: Đăng ký tài khoản
@@ -18,26 +11,45 @@ const router = express.Router();
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         application/x-www-form-urlencoded:
  *           schema:
  *             type: object
  *             required:
  *               - username
  *               - password
- *               - role
  *             properties:
  *               username:
  *                 type: string
+ *                 example: student01
  *               password:
  *                 type: string
+ *                 format: password
+ *                 example: 123456
  *               role:
  *                 type: string
  *                 enum: [student, teacher]
+ *                 example: student
  *     responses:
  *       201:
- *         description: Tạo tài khoản thành công
+ *         description: Đăng ký thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User registered successfully
  *       400:
- *         description: Tài khoản đã tồn tại hoặc dữ liệu không hợp lệ
+ *         description: Username đã tồn tại hoặc role không hợp lệ
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Username already exists / Invalid role
  */
 
 router.post('/signup', Signup);

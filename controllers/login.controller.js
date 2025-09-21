@@ -1,5 +1,7 @@
+require('dotenv').config();
 const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const Login = async (req, res) => {
     try {
@@ -18,8 +20,14 @@ const Login = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Invalid password' });
         }
-
-        res.status(200).json(user._id);
+        // Tạo JWT
+        const accessToken = jwt.sign({ id: user._id}, process.env.JWT_SECRET, { expiresIn: '30m' });
+        const refreshToken = jwt.sign({ id: user._id}, process.env.JWT_SECRET_RESET, { expiresIn: '1d' });
+        // Lưu refreshToken vào database
+        user.refreshToken = refreshToken;
+        await user.save();
+        
+        res.status(200).json({ message: 'Login successful', accessToken, refreshToken });
     } catch (error) {
         console.error('Error during login:', error);
         res.status(500).json({ message: 'Internal server error' });

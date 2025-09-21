@@ -22,6 +22,20 @@ const options = {
                 url: 'https://student-management-api-64hl.onrender.com/api',
             },
         ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                },
+            },
+        },
+        security: [
+            {
+                bearerAuth: [],
+            },
+        ],
     },
     apis: ['./routes/*.js'], // Đường dẫn tới các file định nghĩa API bằng swagger comments
 };
